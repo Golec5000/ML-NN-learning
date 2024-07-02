@@ -96,12 +96,11 @@ matrix_a = np.array([
 
 print(matrix_a)
 
-add_100 = lambda i: i + 100 # lambda function -> add 100 to element
+add_100 = lambda i: i + 100  # lambda function -> add 100 to element
 
 vectorized_add_100 = np.vectorize(add_100)  # vectorize function -> apply to all elements in matrix
 
 print(vectorized_add_100(matrix_a))
-
 
 # np min max
 
@@ -199,13 +198,13 @@ print(np.dot(vector_a, vector_b))  # 32 -> dot product of two vectors
 print(vector_a @ vector_b)  # 32 -> dot product of two vectors
 # np add subtract multiply
 
-matrix_a = np.random.random((3,3))
+matrix_a = np.random.random((3, 3))
 
-matrix_b = np.random.random((3,3))
+matrix_b = np.random.random((3, 3))
 
 print(np.add(matrix_a, matrix_b))  # add two matrices -> matrix_a + matrix_b
 print(np.subtract(matrix_a, matrix_b))  # subtract two matrices -> matrix_a - matrix_b
-print(np.multiply(matrix_a, matrix_b))  # multiply two matrices -> matrix_a @ matrix_b
+print(np.dot(matrix_a, matrix_b))  # multiply two matrices -> matrix_a @ matrix_b
 
 # np inverse
 
@@ -219,11 +218,11 @@ matrix = np.array(
 inveted_matrix = np.linalg.inv(matrix)
 print(inveted_matrix)  # inverse of matrix
 
-print(matrix @ inveted_matrix)  # [[1. 0.] [0. 1.]] -> identity matrix
+print(np.dot(matrix, inveted_matrix))  # [[1. 0.] [0. 1.]] -> identity matrix
 
 # np generate random numbers
 
 print(np.random.random(3))  # [0.14022471 0.96360618 0.37601032] -> 3 random numbers between 0 and 1
 print(np.random.randint(0, 11, 3))  # [7 2 9] -> 3 random integers between 0 and 10
 print(np.random.normal(0.0, 1.0, 3))  # [ 0.14404357 -0.50132438  0.27480168] -> 3 random numbers from normal distribution
-print(np.random.logistic(0.0, 1.0, 3))  # [-0.07336607 -0.07336607  0.07336607] -> 3 random numbers from logistic distribution
+print(np.random.logistic(0.0, 1.0,3))  # [-0.07336607 -0.07336607  0.07336607] -> 3 random numbers from logistic distribution
