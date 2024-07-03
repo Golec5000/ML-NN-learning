@@ -3,3 +3,6 @@ scipy
 scikit-learn
 matplotlib
 pandas
+bs4
+lxml
+opencv-python

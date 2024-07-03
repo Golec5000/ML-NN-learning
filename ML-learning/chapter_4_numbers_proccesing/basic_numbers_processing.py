@@ -1,8 +1,10 @@
 import numpy as np
 from sklearn import preprocessing
-from sklearn.preprocessing import Normalizer
-from sklearn.preprocessing import PolynomialFeatures
-from sklearn.preprocessing import FunctionTransformer
+from sklearn.preprocessing import Normalizer, PolynomialFeatures, FunctionTransformer, StandardScaler, Binarizer
+from sklearn.covariance import EllipticEnvelope
+from sklearn.datasets import make_blobs
+from sklearn.cluster import KMeans
+from sklearn.impute import KNNImputer, SimpleImputer
 import pandas as pd
 
 # scale feature to a range
@@ -106,3 +108,143 @@ df = pd.DataFrame(data, columns=['feature_1', 'feature_2'])
 # apply a function to a pandas column
 # apply the function to the dataframe
 print(df.apply(add_ten).head())
+
+# detect outliers
+
+data, _ = make_blobs(n_samples=10,
+                     n_features=2,
+                     centers=1,
+                     random_state=1)
+
+# replace the first data point with an outlier
+data[0, 0] = 10000
+data[0, 1] = 10000
+
+outlier_detector = EllipticEnvelope(contamination=.1)  # create EllipticEnvelope object with 10% contamination
+
+# fit detector
+outlier_detector.fit(data)  # fit the data
+
+# predict outliers
+print(outlier_detector.predict(data))  # predict the data
+
+# outlier handling
+
+hauses = pd.DataFrame()
+hauses['Price'] = [534433, 392333, 293222, 4322032]
+hauses['Bathrooms'] = [2, 3.5, 2, 116]
+hauses['Square_Feet'] = [1500, 2500, 1500, 48000]
+
+# filter observations
+print(hauses[hauses['Bathrooms'] < 20])  # filter the data
+
+# filter and mark the outliers
+
+hauses['Outlier'] = np.where(hauses['Bathrooms'] < 20, 0, 1)  # mark the outliers
+
+print(hauses.head())
+
+# calc log of the feature
+hauses['Log_of_Square_Feet'] = [np.log(x) for x in hauses['Square_Feet']]  # calculate the log of the Square_Feet column
+
+print(hauses.head())
+
+# discretize feature
+
+age = np.array([
+    [6],
+    [12],
+    [20],
+    [36],
+    [65]
+])
+
+# bin feature
+binarizer = Binarizer(threshold=18)  # create Binarizer object with threshold 18
+
+print(binarizer.fit_transform(
+    age))  # fit and transform the data -> equlavent to binarizer.fit(data) and binarizer.transform(data)
+
+# group observations using k-means clustering
+
+data, _ = make_blobs(n_samples=50,
+                     n_features=2,
+                     centers=3,
+                     random_state=1)
+
+dataframe = pd.DataFrame(data, columns=['feature_1', 'feature_2'])
+
+# create k-means clustering
+clusterer = KMeans(3, random_state=0)  # create KMeans object with 3 clusters
+
+# fit the model
+clusterer.fit(data)  # fit the data
+
+# predict the cluster
+dataframe['group'] = clusterer.predict(data)  # predict the data
+
+print(dataframe.head())
+
+# remove observations with missing values
+
+data = np.array([
+    [1.1, 11.1],
+    [2.2, 22.2],
+    [3.3, 33.3],
+    [4.4, 44.4],
+    [np.nan, 55]
+])
+
+# remove observations with missing values
+
+print(data[~np.isnan(data).any(axis=1)])  # remove the missing values
+
+# remove observations with missing values
+dataframe = pd.DataFrame(data, columns=['feature_1', 'feature_2'])
+
+print(dataframe.dropna())  # remove the missing values
+
+# impute missing values
+
+data, _ = make_blobs(n_samples=1000,
+                     n_features=2,
+                     random_state=1)
+
+scaler = StandardScaler()  # create StandardScaler object
+
+data_standardized = scaler.fit_transform(data)  # fit and transform the data
+
+# introduce a nan
+
+true_value = data_standardized[0, 0]  # store the true value
+
+data_standardized[0, 0] = np.nan  # set the first value to missing
+
+# predict the missing values
+
+imputer = KNNImputer(n_neighbors=5)  # create KNNImputer object
+
+data_standardized_imputed = imputer.fit_transform(data_standardized)  # fit and transform the data
+
+print('True Value:', true_value)
+print('Imputed Value:', data_standardized_imputed[0, 0])
+
+data, _ = make_blobs(n_samples=1000,
+                     n_features=2,
+                     random_state=1)
+
+scaler = StandardScaler()  # create StandardScaler object
+
+data_standardized = scaler.fit_transform(data)  # fit and transform the data
+
+# introduce a nan
+
+true_value = data_standardized[0, 0]  # store the true value
+data_standardized[0, 0] = np.nan  # set the first value to missing
+
+mean_imputer = SimpleImputer(strategy='mean')  # create SimpleImputer object
+
+data_standardized_imputed = mean_imputer.fit_transform(data_standardized)  # fit and transform the data
+
+print('True Value:', true_value)
+print('Imputed Value:', data_standardized_imputed[0, 0])
