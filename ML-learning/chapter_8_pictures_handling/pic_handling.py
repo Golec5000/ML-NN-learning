@@ -130,3 +130,43 @@ plt.axis("off")
 # Using histograms as features
 
 np.random.seed(0)
+
+image_bgr = cv2.imread("wombat.jpeg", cv2.IMREAD_COLOR)
+
+image_rgb = cv2.cvtColor(image_bgr, cv2.COLOR_BGR2RGB)
+
+features = []
+
+colors = ("r", "g", "b")
+
+for i, channel in enumerate(colors):
+    histogram = cv2.calcHist([image_rgb],  # obraz
+                             [i],  # indeks kanału
+                             None,  # brak maski
+                             [256],  # wielkośc histogramu
+                             [0, 256])  # zakres wartości
+    features.extend(histogram)
+
+observation = np.array(features).flatten()
+
+print(observation[0:5])
+
+print(image_rgb[0, 0])
+
+import pandas as pd
+
+data = pd.Series([1, 1, 2, 2, 3, 3, 4, 4, 5])
+
+data.hist(grid=False)
+plt.show()
+
+for i, channel in enumerate(colors):
+    histogram = cv2.calcHist([image_rgb],  # obraz
+                             [i],  # indeks kanału
+                             None,  # brak maski
+                             [256],  # wielkośc histogramu
+                             [0, 256])  # zakres wartości
+    plt.plot(histogram, color=channel)
+    plt.xlim([0, 256])
+
+plt.show()
