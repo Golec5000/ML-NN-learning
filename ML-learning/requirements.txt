@@ -8,3 +8,6 @@ lxml
 opencv-python
 torch
 torchvision
+pydotplus
+ipython
+pip
