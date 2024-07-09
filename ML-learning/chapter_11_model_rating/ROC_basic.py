@@ -1,7 +1,8 @@
 from matplotlib import pyplot as plt
-from sklearn.datasets import make_classification
+from pandas.core.common import random_state
+from sklearn.datasets import make_classification, load_iris
 from sklearn.linear_model import LogisticRegression
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, cross_val_score
 from sklearn.metrics import roc_curve, roc_auc_score
 
 # Create feature matrix and target vector
@@ -47,6 +48,19 @@ plt.plot([0, 1], ls="--")
 plt.plot([0, 0], [1, 0], c=".7"), plt.plot([1, 1], c=".7")
 plt.ylabel("True Positive Rate")
 plt.xlabel("False Positive Rate")
-plt.show()
+# plt.show()
 
 print(logit.predict_proba(features_test)[0:1])
+
+features, target = make_classification(
+    n_samples=10000,
+    n_features=5,
+    n_informative=5,
+    n_redundant=0,
+    n_classes=3,
+    random_state=1
+)
+
+logit = LogisticRegression()
+
+print(cross_val_score(logit, features, target, scoring='accuracy'))
