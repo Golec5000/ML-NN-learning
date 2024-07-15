@@ -12,7 +12,7 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 input_size = 28 * 28
 hidden_size = 1000
 n_classes = 10
-n_epoch = 10
+n_epoch = 100
 batch_size = 100
 learning_rate = 0.001
 
@@ -55,6 +55,8 @@ optimazer = torch.optim.Adam(model.parameters(), lr=learning_rate)
 # treaning model
 
 n_total_step = len(train_loader)
+
+model.to(device)
 
 for epoch in range(n_epoch):
     for i, (images, labels) in enumerate(train_loader):
